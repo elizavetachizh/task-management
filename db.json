@@ -5,9 +5,12 @@
       "title": "Подготовить структуру проекта",
       "description": "Настроить feature-based архитектуру, роутинг и store",
       "status": "inProgress",
-      "priority": "high",
+      "priority": "medium",
       "deadline": "2026-03-30T18:00:00.000Z",
-      "tags": ["frontend", "architecture"],
+      "tags": [
+        "frontend",
+        "architecture"
+      ],
       "createdAt": "2026-03-23T09:00:00.000Z",
       "updatedAt": "2026-03-23T09:00:00.000Z"
     },
@@ -16,17 +19,61 @@
       "title": "Сверстать карточки задач",
       "description": "Добавить UI карточки и быстрый апдейт статуса",
       "status": "todo",
-      "priority": "medium",
+      "priority": "low",
       "deadline": "2026-04-05T18:00:00.000Z",
-      "tags": ["ui", "tasks"],
+      "tags": [
+        "ui",
+        "tasks"
+      ],
       "createdAt": "2026-03-23T10:00:00.000Z",
       "updatedAt": "2026-03-23T10:00:00.000Z"
+    },
+    {
+      "id": "task-4",
+      "title": "Задача 4",
+      "description": "Описание задачи 4",
+      "status": "todo",
+      "priority": "medium",
+      "deadline": "2026-03-20T18:00:00.000Z",
+      "tags": [
+        "ui",
+        "tasks"
+      ],
+      "createdAt": "2026-03-23T10:00:00.000Z",
+      "updatedAt": "2026-03-23T10:00:00.000Z"
+    },
+    {
+      "title": "Задача-5",
+      "description": "разработать фопму создания",
+      "status": "todo",
+      "priority": "medium",
+      "deadline": "2026-04-05T18:00:00.000Z",
+      "tags": [
+        "frontend",
+        "ui"
+      ],
+      "createdAt": "2026-03-25T18:45:52.285Z",
+      "updatedAt": "2026-03-25T18:45:52.285Z",
+      "id": "HTNjEFqnwAY"
     }
   ],
   "tags": [
-    { "id": "tag-frontend", "name": "frontend" },
-    { "id": "tag-architecture", "name": "architecture" },
-    { "id": "tag-ui", "name": "ui" },
-    { "id": "tag-tasks", "name": "tasks" }
-  ]
+    {
+      "id": "tag-frontend",
+      "name": "frontend"
+    },
+    {
+      "id": "tag-architecture",
+      "name": "architecture"
+    },
+    {
+      "id": "tag-ui",
+      "name": "ui"
+    },
+    {
+      "id": "tag-tasks",
+      "name": "tasks"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

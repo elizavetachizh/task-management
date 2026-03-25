@@ -30,3 +30,6 @@ export interface GetTasksParams {
 }
 export type CreateTaskInput = Omit<Task, 'id' | 'createdAt' | 'updatedAt'>
 export type UpdateTaskInput = Partial<Omit<Task, 'id' | 'createdAt' | 'updatedAt'>>
+export type UpdateTaskStatusInput = {
+  status: TaskStatus
+}

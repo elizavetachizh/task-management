@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { CreateTaskInput, GetTasksParams, Task, UpdateTaskInput } from '../../entities/task/model/types/task'
+import type { CreateTaskInput, GetTasksParams, Task, UpdateTaskInput, UpdateTaskStatusInput } from '../../entities/task/model/types/task'
 import type { Tag } from '../../entities/tag/model/types/tag'
 
 
@@ -15,7 +15,8 @@ const buildTasksParams = (params?: GetTasksParams) => {
     ...(params.status ? { status: params.status } : {}),
     ...(params.priority ? { priority: params.priority } : {}),
     ...(params.tag ? { tags_like: params.tag } : {}), // для массива tags в json-server
-    ...(params.search ? { title_like: params.search } : {}), // поиск по title
+    // json-server v1: подстрока — через :contains (не title_like и не title= из v0)
+    ...(params.search ? { title_like: params.search } : {}),
     ...(params.sortBy ? { _sort: params.sortBy } : {}),
     ...(params.order ? { _order: params.order } : {}),
     ...(params.page ? { _page: params.page } : {}),
@@ -86,6 +87,19 @@ getTasks: builder.query<GetTasksResponse, GetTasksParams | undefined>({
       { type: 'Task', id: 'LIST' },
     ],
   }),
+  updateTaskStatus: builder.mutation<Task, { id: string; data: UpdateTaskStatusInput }>({
+    query: ({ id, data }) => ({
+      url: `/tasks/${id}`,
+      method: 'PATCH',
+      body: {
+        ...data,
+      },
+    }),
+    invalidatesTags: (_result, _error, { id }) => [
+      { type: 'Task', id },
+      { type: 'Task', id: 'LIST' },
+    ],
+  }),
 
   deleteTask: builder.mutation<void, string>({
     query: (id) => ({
@@ -120,7 +134,7 @@ export const {
   useGetTaskByIdQuery,
   useCreateTaskMutation,
   useUpdateTaskMutation,
-  // useUpdateTaskStatusMutation,
+   useUpdateTaskStatusMutation,
   useDeleteTaskMutation,
   useGetTagsQuery,
   useCreateTagMutation,
