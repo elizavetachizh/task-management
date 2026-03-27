@@ -3,8 +3,8 @@
     {
       "id": "task-1",
       "title": "Подготовить структуру проекта",
-      "description": "Настроить feature-based архитектуру, роутинг и store",
-      "status": "inProgress",
+      "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu",
+      "status": "todo",
       "priority": "medium",
       "deadline": "2026-03-30T18:00:00.000Z",
       "tags": [
@@ -12,7 +12,7 @@
         "architecture"
       ],
       "createdAt": "2026-03-23T09:00:00.000Z",
-      "updatedAt": "2026-03-23T09:00:00.000Z"
+      "updatedAt": "2026-03-27T12:59:35.473Z"
     },
     {
       "id": "task-2",
@@ -53,8 +53,61 @@
         "ui"
       ],
       "createdAt": "2026-03-25T18:45:52.285Z",
-      "updatedAt": "2026-03-25T18:45:52.285Z",
+      "updatedAt": "2026-03-27T12:33:20.035Z",
       "id": "HTNjEFqnwAY"
+    },
+    {
+      "title": "task-5",
+      "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu",
+      "status": "inProgress",
+      "priority": "high",
+      "deadline": "2026-03-29T18:00:00.000Z",
+      "tags": [
+        "ui",
+        "frontend"
+      ],
+      "createdAt": "2026-03-27T13:00:02.624Z",
+      "updatedAt": "2026-03-27T13:00:02.624Z",
+      "id": "Ehnmtyo0GI0"
+    },
+    {
+      "title": "task-6",
+      "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.",
+      "status": "done",
+      "priority": "medium",
+      "deadline": "2026-03-13T18:00:00.000Z",
+      "tags": [
+        "tasks"
+      ],
+      "createdAt": "2026-03-27T13:00:27.905Z",
+      "updatedAt": "2026-03-27T18:35:30.073Z",
+      "id": "xan9OVTuGNg"
+    },
+    {
+      "title": "task-7",
+      "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu",
+      "status": "todo",
+      "priority": "high",
+      "deadline": "2026-03-26T18:00:00.000Z",
+      "tags": [
+        "ui"
+      ],
+      "createdAt": "2026-03-27T13:02:02.989Z",
+      "updatedAt": "2026-03-27T13:02:02.989Z",
+      "id": "4eVvSHLN5_E"
+    },
+    {
+      "title": "testtt",
+      "description": "testtt",
+      "status": "todo",
+      "priority": "high",
+      "deadline": "2026-03-27T18:00:00.000Z",
+      "tags": [
+        "ui"
+      ],
+      "createdAt": "2026-03-27T16:32:29.579Z",
+      "updatedAt": "2026-03-27T16:32:29.579Z",
+      "id": "NJWdh4b4QuA"
     }
   ],
   "tags": [
@@ -73,6 +126,14 @@
     {
       "id": "tag-tasks",
       "name": "tasks"
+    },
+    {
+      "name": "new",
+      "id": "gFyLdcQPe4g"
+    },
+    {
+      "name": "еуые",
+      "id": "TtSUoIG0taA"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
