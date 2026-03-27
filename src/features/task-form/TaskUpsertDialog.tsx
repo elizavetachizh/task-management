@@ -10,17 +10,19 @@ import {
   FormControlLabel,
   FormHelperText,
   FormLabel,
+  IconButton,
   LinearProgress,
   MenuItem,
   Radio,
   RadioGroup,
+  SvgIcon,
   TextField,
 } from '@mui/material'
 import { useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { statusLabelMap } from '../../entities/task/config/labels'
-import type { Task } from '../../entities/task/model/types/task'
-import { TASK_PRIORITIES, TASK_STATUSES } from '../../entities/task/model/types/task'
+import type { Task } from '../../entities/task/model/task'
+import { TASK_PRIORITIES, TASK_STATUSES } from '../../entities/task/model/task'
 import {
   useCreateTagMutation,
   useCreateTaskMutation,
@@ -131,7 +133,30 @@ export default function TaskUpsertDialog({ open, onClose, task }: TaskUpsertDial
         if (!isPending) onClose()
       }}
     >
-      <DialogTitle>{isEdit ? 'Редактирование задачи' : 'Новая задача'}</DialogTitle>
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 1,
+          pr: 1,
+        }}
+      >
+        {isEdit ? 'Редактирование задачи' : 'Новая задача'}
+        <IconButton
+          aria-label="Закрыть"
+          onClick={() => {
+            if (!isPending) onClose()
+          }}
+          disabled={isPending}
+          edge="end"
+          size="small"
+        >
+          <SvgIcon fontSize="small" viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+          </SvgIcon>
+        </IconButton>
+      </DialogTitle>
       <form onSubmit={onSubmit} noValidate>
         <DialogContent sx={{ pt: 1 }}>
           {isPending && <LinearProgress sx={{ mb: 2 }} />}
@@ -156,7 +181,7 @@ export default function TaskUpsertDialog({ open, onClose, task }: TaskUpsertDial
             margin="normal"
             error={!!errors.description}
             helperText={errors.description?.message ?? `${500} символов макс.`}
-            inputProps={{ maxLength: 500 }}
+            slotProps={{ htmlInput: { maxLength: 500 } }}
           />
 
           <Controller

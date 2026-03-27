@@ -4,7 +4,11 @@ import { Outlet } from "react-router-dom";
 export default function AppLayout() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <AppBar position="static" elevation={0} sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{ borderBottom: 1, borderColor: "divider" }}
+      >
         <Toolbar>
           <Typography variant="h6" component="span" sx={{ fontWeight: 600 }}>
             Task Management

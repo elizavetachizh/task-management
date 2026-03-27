@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import { useGetTaskByIdQuery } from "../shared/api/baseApi";
 import {
   Box,
@@ -13,6 +13,7 @@ import { useState } from "react";
 import DeleteTaskDialog from "../features/delete-task/DeleteTaskDialog";
 import TaskUpsertDialog from "../features/task-form/TaskUpsertDialog";
 import { ROUTES } from "../shared/config/routes";
+import { formatTaskDeadline } from "../shared/lib/date/formatTaskDeadline";
 import { isTaskOverdue } from "../shared/lib/date/isTaskOverdue";
 import {
   priorityLabelMap,
@@ -26,39 +27,71 @@ export default function TaskDetailsPage() {
     isLoading,
     error,
   } = useGetTaskByIdQuery(id ?? "", { skip: !id });
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
 
   const isOverdue = task ? isTaskOverdue(task) : false;
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Ошибка при загрузке задачи</div>;
-  if (!task) return <div>Задача не найдена</div>;
+  const backToList = (
+    <Button
+      component={RouterLink}
+      to={ROUTES.home}
+      variant="text"
+      size="small"
+      sx={{ mb: 1, px: 0 }}
+    >
+      ← Ко всем задачам
+    </Button>
+  );
 
-const handleDeleteSuccess = () => {
-  setOpenDeleteDialog(false);
-  navigate(ROUTES.home);
-}
+  if (isLoading) {
+    return (
+      <Box maxWidth={900} mx="auto" mt={4}>
+        {backToList}
+        <div>Loading...</div>
+      </Box>
+    );
+  }
+  if (error) {
+    return (
+      <Box maxWidth={900} mx="auto" mt={4}>
+        {backToList}
+        <div>Ошибка при загрузке задачи</div>
+      </Box>
+    );
+  }
+  if (!task) {
+    return (
+      <Box maxWidth={900} mx="auto" mt={4}>
+        {backToList}
+        <div>Задача не найдена</div>
+      </Box>
+    );
+  }
+
+  const handleDeleteSuccess = () => {
+    setOpenDeleteDialog(false);
+    navigate(ROUTES.home);
+  };
 
   return (
     <>
       <Box maxWidth={900} mx="auto" mt={4}>
         <Card>
           <CardContent>
+            {backToList}
             <Box sx={{ mb: 2 }}>
               <Typography variant="h5">{task.title}</Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body1">
                 {task.description || "No description"}
               </Typography>
             </Box>
 
             <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mb: 1 }}>
+              <Chip label={`Статус: ${statusLabelMap[task.status]}`} />
               <Chip
-                label={`Status: ${statusLabelMap[task.status]}`}
-              />
-              <Chip
-                label={`Priority: ${priorityLabelMap[task.priority]}`}
+                label={`Приоритет: ${priorityLabelMap[task.priority]}`}
                 color={
                   task.priority === "high"
                     ? "error"
@@ -68,7 +101,7 @@ const handleDeleteSuccess = () => {
                 }
               />
               <Chip
-                label={`Deadline: ${task.deadline}`}
+                label={`Дедлайн: ${formatTaskDeadline(task.deadline)}`}
                 color={isOverdue ? "error" : "default"}
                 variant={isOverdue ? "filled" : "outlined"}
               />
@@ -108,6 +141,7 @@ const handleDeleteSuccess = () => {
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
         taskId={task.id}
+        taskTitle={task.title}
         onDeleteSuccess={handleDeleteSuccess}
       />
       <TaskUpsertDialog

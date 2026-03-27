@@ -3,26 +3,47 @@ import {
   Button,
   CircularProgress,
   Container,
-  InputAdornment,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import TaskCard from '../entities/task/ui/TaskCard'
 import TaskUpsertDialog from '../features/task-form/TaskUpsertDialog'
-import { useGetTasksQuery } from '../shared/api/baseApi'
+import TagsManageDialog from '../widgets/tags-manage-dialog'
+import TasksFilters from '../widgets/tasks-filters'
+import TasksPagination from '../widgets/tasks-pagination'
+import useTasksList from './useTasksList'
 
 export default function TasksListPage() {
   const navigate = useNavigate()
   const [createOpen, setCreateOpen] = useState(false)
-  const [search, setSearch] = useState('')
-  const trimmedSearch = search.trim()
-
-  const queryArgs = trimmedSearch ? { search: trimmedSearch } : {}
-  const { data, isLoading, isFetching, error } = useGetTasksQuery(queryArgs)
-  const tasks = data?.data ?? []
+  const [tagsDialogOpen, setTagsDialogOpen] = useState(false)
+  const {
+    totalCount,
+    displayedTasks,
+    hasFilters,
+    clearFilters,
+    isLoading,
+    isFetching,
+    error,
+    hasData,
+    tagsData,
+    search,
+    setSearch,
+    statusFilter,
+    setStatusFilter,
+    priorityFilter,
+    setPriorityFilter,
+    tagFilter,
+    setTagFilter,
+    sortOption,
+    setSortOption,
+    page,
+    setPage,
+    rowsPerPage,
+    setRowsPerPage,
+  } = useTasksList()
 
   return (
     <Container
@@ -43,33 +64,50 @@ export default function TasksListPage() {
         <Typography variant="h4" component="h1" sx={{ fontWeight: 600 }}>
           Задачи
         </Typography>
-        <Button variant="contained" color="primary" onClick={() => setCreateOpen(true)}>
-          Новая задача
-        </Button>
+        <Stack
+          direction="row"
+          spacing={1}
+          flexWrap="wrap"
+          useFlexGap
+          justifyContent={{ xs: 'stretch', sm: 'flex-end' }}
+        >
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => setTagsDialogOpen(true)}
+          >
+            Теги
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setCreateOpen(true)}
+          >
+            Новая задача
+          </Button>
+        </Stack>
       </Stack>
 
-      <TextField
-        fullWidth
-        size="small"
-        placeholder="Поиск по названию"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        aria-label="Поиск по названию задачи"
-        sx={{ mb: { xs: 2, sm: 3 }, maxWidth: { sm: 400 } }}
-        slotProps={{
-          input: {
-            endAdornment: isFetching ? (
-              <InputAdornment position="end">
-                <CircularProgress color="inherit" size={20} />
-              </InputAdornment>
-            ) : undefined,
-          },
-        }}
+      <TasksFilters
+        search={search}
+        setSearch={setSearch}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        priorityFilter={priorityFilter}
+        setPriorityFilter={setPriorityFilter}
+        tagFilter={tagFilter}
+        setTagFilter={setTagFilter}
+        sortOption={sortOption}
+        setSortOption={setSortOption}
+        hasFilters={hasFilters}
+        clearFilters={clearFilters}
+        isFetching={isFetching}
+        tagsData={tagsData}
       />
 
       {error ? (
         <Typography color="error">Ошибка при загрузке задач</Typography>
-      ) : isLoading && !data ? (
+      ) : isLoading && !hasData ? (
         <Box
           display="flex"
           justifyContent="center"
@@ -78,41 +116,61 @@ export default function TasksListPage() {
         >
           <CircularProgress />
         </Box>
-      ) : tasks.length === 0 ? (
+      ) : totalCount === 0 ? (
         <Typography color="text.secondary">
-          {trimmedSearch
-            ? 'Ничего не найдено по этому запросу.'
+          {hasFilters
+            ? 'Ничего не найдено по выбранным фильтрам.'
             : 'Не было создано ни одной задачи.'}
         </Typography>
       ) : (
-        <Box
-          sx={{
-            display: 'grid',
-            gap: { xs: 2, sm: 2.5 },
-            gridTemplateColumns: {
-              xs: 'minmax(0, 1fr)',
-              sm: 'repeat(3, minmax(0, 1fr))',
-            },
-            maxWidth: 1200,
-            mx: 'auto',
-            opacity: isFetching ? 0.65 : 1,
-            transition: (theme) =>
-              theme.transitions.create('opacity', {
-                duration: theme.transitions.duration.shorter,
-              }),
-          }}
-        >
-          {tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onClick={() => navigate(`/task/${task.id}`)}
-            />
-          ))}
-        </Box>
+        <>
+          <Box
+            sx={{
+              display: 'grid',
+              alignItems: 'stretch',
+              gap: { xs: 2, sm: 2.5 },
+              gridTemplateColumns: {
+                xs: 'minmax(0, 1fr)',
+                sm: 'repeat(3, minmax(0, 1fr))',
+              },
+              maxWidth: 1200,
+              mx: 'auto',
+              opacity: isFetching ? 0.65 : 1,
+              transition: (theme) =>
+                theme.transitions.create('opacity', {
+                  duration: theme.transitions.duration.shorter,
+                }),
+            }}
+          >
+            {displayedTasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onClick={() => navigate(`/task/${task.id}`)}
+                onTagClick={(tag) =>
+                  setTagFilter((prev) => (prev === tag ? '' : tag))
+                }
+              />
+            ))}
+          </Box>
+          <TasksPagination
+            totalCount={totalCount}
+            page={page}
+            setPage={setPage}
+            rowsPerPage={rowsPerPage}
+            setRowsPerPage={setRowsPerPage}
+          />
+        </>
       )}
 
-      <TaskUpsertDialog open={createOpen} onClose={() => setCreateOpen(false)} />
+      <TagsManageDialog
+        open={tagsDialogOpen}
+        onClose={() => setTagsDialogOpen(false)}
+      />
+      <TaskUpsertDialog
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+      />
     </Container>
   )
 }

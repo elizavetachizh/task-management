@@ -1,75 +1,88 @@
-# React + TypeScript + Vite
+# Task Management
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Одностраничное приложение (SPA) для управления задачами: список карточек с фильтрами и сортировкой, страница задачи, создание и редактирование через модальное окно, работа с тегами. В качестве бэкенда используется **JSON Server** (локальный REST на файле `db.json`), клиентские запросы — через **RTK Query**.
 
-Currently, two official plugins are available:
+## Стек
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React** 19, **TypeScript**, **Vite**
+- **MUI**, **React Router**
+- **Redux Toolkit** + **RTK Query**
+- **react-hook-form** + **Zod** для форм
+- **Vitest** + **Testing Library** для тестов
 
-## React Compiler
+## Запуск
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Требования
 
-Note: This will impact Vite dev & build performances.
+- Node.js с npm (рекомендуется актуальная LTS-версия)
 
-## Expanding the ESLint configuration
+### Установка зависимостей
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Скопируйте пример переменных окружения (при необходимости отредактируйте порт):
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env
 ```
+
+В `.env` задаётся **`VITE_API_PORT`** — порт json-server (по умолчанию `3001`, если не задано). Его используют и фронт (`baseApi`), и скрипт **`npm run dev:api`** (`scripts/dev-api.mjs`).
+
+### Режим разработки
+
+Нужны **два процесса**: API и фронтенд.
+
+1. В первом терминале поднять JSON Server (порт **3001**):
+
+   ```bash
+   npm run dev:api
+   ```
+
+2. Во втором — Vite (по умолчанию **http://localhost:5173**):
+
+   ```bash
+   npm run dev
+   ```
+
+Либо одной командой:
+
+```bash
+npm run dev:full
+```
+
+### Сборка продакшена
+
+```bash
+npm run build
+```
+
+Просмотр собранного приложения:
+
+```bash
+npm run preview
+```
+
+### Тесты и линт
+
+```bash
+npm test          # один прогон
+npm run test:watch # watch-режим
+npm run lint
+```
+
+## Архитектура (кратко)
+
+Структура близка к **Feature-Sliced Design**: слои разделены по зонам ответственности.
+
+| Слой / папка | Назначение |
+|--------------|------------|
+| **`app/`** | Точка входа приложения: роутер, провайдер Redux. |
+| **`pages/`** | Страницы-экраны (`TasksListPage`, `TaskDetailsPage`), хуки страниц (`useTasksList`). |
+| **`widgets/`** | Крупные составные блоки UI: фильтры списка, пагинация, диалог управления тегами. |
+| **`features/`** | Прикладные сценарии: форма создания/редактирования задачи, диалог удаления. |
+| **`entities/`** | Доменные сущности (`task`, `tag`): типы, карточка задачи, подписи к полям. |
+| **`shared/`** | Переиспользуемая инфраструктура: RTK Query API (`baseApi`), конфиг маршрутов, утилиты (даты), общий layout. |
+
+Данные задач и тегов описаны в **`shared/api/baseApi.ts`** (endpoints, кэш-теги, трансформации ответа json-server). Состояние серверных данных централизовано в Redux; локальное UI-состояние списка (фильтры, страница пагинации) живёт в хуке **`useTasksList`**.

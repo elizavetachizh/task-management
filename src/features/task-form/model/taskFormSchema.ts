@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { TASK_PRIORITIES, TASK_STATUSES } from '../../../entities/task/model/types/task'
+import { TASK_PRIORITIES, TASK_STATUSES } from '../../../entities/task/model/task'
 
 export const taskFormSchema = z.object({
   title: z.string().trim().min(5, 'Минимум 5 символов'),
